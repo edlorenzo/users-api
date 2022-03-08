@@ -1,0 +1,7 @@
+redis:
+  addr: "192.168.16.5:6379"
+  password: "abc123"
+  poolSize: 300
+
+githubAPI:
+  usersURI: "https://api.github.com/users"

@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "6814c2d2-63fe-4538-893e-96aca093c665",
+		"name": "Github-User-API",
+		"description": "Collection for testing the Blog API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var is200Response = responseCode.code === 200;",
+									"",
+									"tests['Response code is 200 OK'] = is200Response;",
+									"",
+									"if(is200Response){",
+									"    var responseJSON = JSON.parse(responseBody);",
+									"",
+									"    var user = responseJSON.user || {};",
+									"    ",
+									"    tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+									"    tests['User has \"status\" property'] = user.hasOwnProperty('status');",
+									"    tests['User has \"message\" property'] = user.hasOwnProperty('message');",
+									"",
+									"    let jsonData = pm.response.json()",
+									"",
+									"    pm.test('user data `name|login|company|followers|public_repos`', () => {",
+									"        _.each(jsonData.data, (item) => {",
+									"            tests['followers is an integer'] = item.hasOwnProperty('name')",
+									"            tests['followers is an integer'] = item.hasOwnProperty('login')",
+									"            tests['followers is an integer'] = item.hasOwnProperty('company')",
+									"            tests['followers is an integer'] = Number.isInteger(item.followers);",
+									"            tests['public_repos is an integer'] = Number.isInteger(item.public_repos);",
+									"        })",
+									"    })",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"url": {
+							"raw": "{{APIURL}}",
+							"host": [
+								"{{APIURL}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

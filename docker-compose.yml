@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  # App Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5007:5007"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      REDIS_URL: redis:6379
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: abc123
+    networks:
+      backend-user-api:
+        ipv4_address: 192.168.16.4
+
+  # Redis Service
+  redis:
+    image: "redis:alpine"
+    restart: unless-stopped
+    command: --requirepass abc123
+    networks:
+      backend-user-api:
+        ipv4_address: 192.168.16.5
+
+  main-flow:
+    image: postman/newman_alpine33
+    command:
+      run Github-User-API.postman_collection.json
+      --environment Github-User-API.postman_collection.json
+      --folder main-flow
+      -r cli
+      --delay-request 500
+      --iteration-count 1
+      --color on
+      --global-var "APIURL=http://localhost:5007/api/users/list"
+    volumes:
+      - ./tests/postman:/etc/newman
+
+networks:
+  backend-user-api:
+    external: true
+    name: backend-user-api

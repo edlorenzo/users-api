@@ -1,0 +1,72 @@
+basePath: /api
+definitions:
+  handler.DataList:
+    properties:
+      company:
+        type: string
+      followers:
+        type: integer
+      login:
+        type: string
+      name:
+        type: string
+      public_repos:
+        type: integer
+    type: object
+  handler.userDataListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/handler.DataList'
+        type: array
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  utils.Error:
+    properties:
+      errors:
+        additionalProperties: true
+        type: object
+    type: object
+info:
+  contact: {}
+  description: User List API
+  title: User List API
+paths:
+  /users/list:
+    get:
+      consumes:
+      - application/json
+      description: Get user list. Auth not required
+      operationId: get-user-lists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.userDataListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: Get all users
+      tags:
+      - user
+produces:
+- application/json
+schemes:
+- http
+- https
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
